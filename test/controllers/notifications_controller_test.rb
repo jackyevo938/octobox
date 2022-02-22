@@ -432,7 +432,7 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
     json = Oj.load(response.body)
     notification_count = Notification.inbox.where(user: @user).count
     assert_equal notification_count, json["pagination"]["total_notifications"]
-    assert_equal 0, json["pagination"]["page"]
+    assert_equal 1, json["pagination"]["page"]
     assert_equal (notification_count.to_f / 20).ceil, json["pagination"]["total_pages"]
     assert_equal [notification_count, 20].min, json["pagination"]["per_page"]
   end
@@ -460,7 +460,7 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     json = Oj.load(response.body)
     assert_equal 0, json["pagination"]["total_notifications"]
-    assert_equal 0, json["pagination"]["page"]
+    assert_equal 1, json["pagination"]["page"]
     assert_equal 0, json["pagination"]["total_pages"]
     assert_equal 0, json["pagination"]["per_page"]
   end
@@ -1107,5 +1107,13 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
     get lookup_notifications_path(format: :json)
     assert_response :success
     assert_equal '{}', response.body
+  end
+
+  test 'gracefully handles page number 0' do
+    sign_in_as(@user)
+    notification = create(:notification, user: @user)
+
+    get '/?page=0'
+    assert_response :success
   end
 end
