@@ -357,7 +357,7 @@ GEM
       sprockets (>= 3.0.0)
     sql_queries_count (0.0.1)
       rails (> 3.0.0)
-    strscan (3.0.1)
+    strscan (3.0.3)
     thor (1.2.1)
     thwait (0.2.0)
       e2mmap
